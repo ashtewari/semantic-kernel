@@ -17,23 +17,23 @@ public class AzureCognitiveSearchMemoryRecord
     /// <summary>
     /// ID field name.
     /// </summary>
-    public const string IdField = "Id";
+    public const string IdField = "id";
     /// <summary>
     /// Text field name.
     /// </summary>
-    public const string TextField = "Text";
+    public const string TextField = "content";
     /// <summary>
     /// Embedding field name.
     /// </summary>
-    public const string EmbeddingField = "Embedding";
+    public const string EmbeddingField = "contentVector";
     /// <summary>
     /// External source name field name.
     /// </summary>
-    public const string ExternalSourceNameField = "ExternalSourceName";
+    public const string ExternalSourceNameField = "url";
     /// <summary>
     /// Description field name.
     /// </summary>
-    public const string DescriptionField = "Description";
+    public const string DescriptionField = "filepath";
     /// <summary>
     /// Additional metadata field name.
     /// </summary>
@@ -190,8 +190,15 @@ public class AzureCognitiveSearchMemoryRecord
     /// <returns>The encoded ID.</returns>
     protected internal static string EncodeId(string realId)
     {
-        var bytes = Encoding.UTF8.GetBytes(realId);
-        return Convert.ToBase64String(bytes);
+        try
+        {
+            var bytes = Encoding.UTF8.GetBytes(realId);
+            return Convert.ToBase64String(bytes);
+        }
+        catch (Exception)
+        {
+            return realId;
+        }
     }
 
     /// <summary>
@@ -201,7 +208,14 @@ public class AzureCognitiveSearchMemoryRecord
     /// <returns>The decoded ID.</returns>
     private protected static string DecodeId(string encodedId)
     {
-        var bytes = Convert.FromBase64String(encodedId);
-        return Encoding.UTF8.GetString(bytes);
+        try
+        {
+            var bytes = Convert.FromBase64String(encodedId);
+            return Encoding.UTF8.GetString(bytes);
+        }
+        catch (Exception)
+        {
+            return encodedId;
+        }
     }
 }
